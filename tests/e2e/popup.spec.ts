@@ -20,7 +20,9 @@ test.describe('Popup – not connected to Mullvad', () => {
   test('shows the DNS status badge in the header', async ({ extensionPage }) => {
     // Could be "DNS" or "DOH" depending on state; scoped to span to avoid matching the DNS h4 heading
     await expect(
-      extensionPage.locator('span').getByText('DNS', { exact: true })
+      extensionPage
+        .locator('span')
+        .getByText('DNS', { exact: true })
         .or(extensionPage.locator('span').getByText('DOH', { exact: true })),
     ).toBeVisible();
   });
@@ -32,16 +34,15 @@ test.describe('Popup – not connected to Mullvad', () => {
 
   test('shows a connection status warning after check completes', async ({ extensionPage }) => {
     // Wait for the loading spinner to disappear (connection check done)
-    await extensionPage.waitForFunction(
-      () => !document.querySelector('.n-spin-content'),
-      { timeout: 15_000 },
-    );
+    await extensionPage.waitForFunction(() => !document.querySelector('.n-spin-content'), {
+      timeout: 15_000,
+    });
     // Without Mullvad VPN, the check returns isMullvad=false.
     // The popup shows a warning about not being connected to Mullvad.
     const warningVisible = await extensionPage
-      .locator('text=Internet can\'t be reached')
+      .locator("text=Internet can't be reached")
       .or(extensionPage.locator('text=Checking connection'))
-      .or(extensionPage.locator('text=Make sure you\'re connected'))
+      .or(extensionPage.locator("text=Make sure you're connected"))
       .first()
       .isVisible()
       .catch(() => false);

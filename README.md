@@ -15,15 +15,15 @@ a one-click access to [proxy servers](https://mullvad.net/en/help/socks5-proxy/)
 
 Route individual domains (or subdomains) through a specific Mullvad proxy server. The minimum
 required identifier is a second-level domain (e.g. `example.com`). Subdomains are matched
-hierarchically — adding `sub.example.com` routes only that subdomain, while `example.com` covers
-all subdomains not otherwise overridden.
+hierarchically — adding `sub.example.com` routes only that subdomain, while `example.com` covers all
+subdomains not otherwise overridden.
 
 ### Automatic TLD routing _(new)_
 
 Enable **Route by TLD** in the Proxy settings tab to automatically route requests for
-country-specific top-level domains through the matching Mullvad proxy. For example, `.th` traffic
-is routed via Thailand, `.de` via Germany, and so on. Generic TLDs (`.com`, `.org`, `.net`, etc.)
-are not affected — they continue using the global proxy setting (if any).
+country-specific top-level domains through the matching Mullvad proxy. For example, `.th` traffic is
+routed via Thailand, `.de` via Germany, and so on. Generic TLDs (`.com`, `.org`, `.net`, etc.) are
+not affected — they continue using the global proxy setting (if any).
 
 The feature requires proxy servers to be available for the destination country. If no matching
 server exists the request falls through to the next rule.
@@ -39,7 +39,8 @@ proxy for every matching request.
 - Lists can be refreshed manually at any time.
 - Individual entries can be toggled on/off without removing them.
 
-Example public lists: [oisd.nl](https://oisd.nl/), [StevenBlack hosts](https://github.com/StevenBlack/hosts).
+Example public lists: [oisd.nl](https://oisd.nl/),
+[StevenBlack hosts](https://github.com/StevenBlack/hosts).
 
 ### Firefox for Android support _(new)_
 
@@ -167,6 +168,8 @@ _External links are marked with this icon_
 
 ## Source code
 
-This fork's source code: [github.com/NaphatrB/browser-extension](https://github.com/NaphatrB/browser-extension)
+This fork's source code:
+[github.com/NaphatrB/browser-extension](https://github.com/NaphatrB/browser-extension)
 
-Upstream source code: [github.com/mullvad/browser-extension](https://github.com/mullvad/browser-extension)
+Upstream source code:
+[github.com/mullvad/browser-extension](https://github.com/mullvad/browser-extension)

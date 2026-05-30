@@ -19,9 +19,7 @@ export function installBrowserMock() {
       get(keys?: string | string[] | null): Promise<Record<string, unknown>> {
         if (!keys) return Promise.resolve({ ...storageData });
         const ks = typeof keys === 'string' ? [keys] : keys;
-        return Promise.resolve(
-          Object.fromEntries(ks.map((k) => [k, storageData[k]])),
-        );
+        return Promise.resolve(Object.fromEntries(ks.map((k) => [k, storageData[k]])));
       },
       set(items: Record<string, unknown>): Promise<void> {
         const changes: Record<string, { newValue?: unknown; oldValue?: unknown }> = {};

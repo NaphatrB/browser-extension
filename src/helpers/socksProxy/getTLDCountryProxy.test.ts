@@ -38,7 +38,11 @@ describe('getTLD', () => {
 });
 
 describe('getTLDCountryProxy', () => {
-  const proxies = [makeProxy('th', '10.0.0.1'), makeProxy('de', '10.0.0.2'), makeProxy('gb', '10.0.0.3')];
+  const proxies = [
+    makeProxy('th', '10.0.0.1'),
+    makeProxy('de', '10.0.0.2'),
+    makeProxy('gb', '10.0.0.3'),
+  ];
 
   it('returns a proxy for a matching ccTLD', () => {
     const result = getTLDCountryProxy('th', proxies);

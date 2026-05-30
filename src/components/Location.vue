@@ -44,7 +44,10 @@ const setProxy = ({ country, countryCode, city, hostname, ipv4_address, port }: 
   toggleLocations();
 
   if (blocklistRouteId.value) {
-    setBlocklistProxy({ country, countryCode, city, hostname, ipv4_address, port }, blocklistRouteId.value);
+    setBlocklistProxy(
+      { country, countryCode, city, hostname, ipv4_address, port },
+      blocklistRouteId.value,
+    );
     blocklistRouteId.value = '';
   } else if (customProxySelect.value) {
     setCustomProxy(

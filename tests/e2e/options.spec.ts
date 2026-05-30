@@ -13,9 +13,13 @@ test.describe('Options page', () => {
   });
 
   test('shows all four navigation tabs', async ({ extensionPage }) => {
-    await expect(extensionPage.locator('.n-tabs-tab__label', { hasText: 'Settings' })).toBeVisible();
+    await expect(
+      extensionPage.locator('.n-tabs-tab__label', { hasText: 'Settings' }),
+    ).toBeVisible();
     await expect(extensionPage.locator('.n-tabs-tab__label', { hasText: 'Proxy' })).toBeVisible();
-    await expect(extensionPage.locator('.n-tabs-tab__label', { hasText: 'Import/Export' })).toBeVisible();
+    await expect(
+      extensionPage.locator('.n-tabs-tab__label', { hasText: 'Import/Export' }),
+    ).toBeVisible();
     await expect(extensionPage.locator('.n-tabs-tab__label', { hasText: 'About' })).toBeVisible();
   });
 

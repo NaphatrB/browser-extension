@@ -38,8 +38,7 @@ export const test = base.extend<ExtensionFixtures>({
     });
 
     // 4. Mock DNS leak check (wildcard UUID sub-domain)
-    const dnsBody =
-      connectionState === 'connected' ? DNS_MULLVAD_RESPONSE : [];
+    const dnsBody = connectionState === 'connected' ? DNS_MULLVAD_RESPONSE : [];
     await page.route(/https:\/\/[a-f0-9-]+\.dnsleak\.am\.i\.mullvad\.net/, async (route) => {
       if (connectionState === 'connected') {
         await route.fulfill({

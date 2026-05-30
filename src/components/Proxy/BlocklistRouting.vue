@@ -53,8 +53,8 @@ const formatDate = (ts: number | null) => {
     <TitleCategory title="Blocklist-based routing" />
 
     <p class="text-sm text-gray-400 mt-1 mb-4">
-      Fetch a domain list (plain or Adblock Plus format) and route matching traffic through a
-      chosen proxy country.
+      Fetch a domain list (plain or Adblock Plus format) and route matching traffic through a chosen
+      proxy country.
     </p>
 
     <div class="flex items-start gap-2 mb-2">
