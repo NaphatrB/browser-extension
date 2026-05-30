@@ -21,7 +21,12 @@ const makeProxy = (countryCode: string, country: string, ipv4 = '1.2.3.4') => ({
   },
 });
 
-const makeBlocklistRoute = (id: string, url: string, country: string, domains: string[]): BlocklistRoute => ({
+const makeBlocklistRoute = (
+  id: string,
+  url: string,
+  country: string,
+  domains: string[],
+): BlocklistRoute => ({
   id,
   url,
   enabled: true,
