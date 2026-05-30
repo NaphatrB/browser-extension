@@ -78,7 +78,7 @@ const { customDns } = useCustomDns();
     </div>
     <div v-if="customDns.enabled && customDns.url" class="flex flex-row items-center mt-1">
       <h4 class="font-semibold mr-2 inline-block">Custom DNS</h4>
-      <span class="text-sm">{{ customDns.mode.toUpperCase() }}: {{ customDns.url }}</span>
+      <span class="text-sm">DoH: {{ customDns.url }}</span>
     </div>
   </div>
 </template>

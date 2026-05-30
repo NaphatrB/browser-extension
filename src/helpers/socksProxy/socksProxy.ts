@@ -153,9 +153,7 @@ async function getLocalStorageItems(): Promise<{
     hostProxiesDetails: JSON.parse(data.hostProxiesDetails),
     randomProxyMode: JSON.parse(data.randomProxyMode),
     tldRoutingEnabled: data.tldRoutingEnabled ? JSON.parse(data.tldRoutingEnabled) : false,
-    customDns: data.customDns
-      ? JSON.parse(data.customDns)
-      : { enabled: false, mode: 'doh', url: '' },
+    customDns: data.customDns ? JSON.parse(data.customDns) : { enabled: false, url: '' },
   };
 }
 
