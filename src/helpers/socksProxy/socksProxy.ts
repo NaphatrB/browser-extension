@@ -69,6 +69,9 @@ export const handleProxyRequest = async (details: browser.proxy._OnRequestDetail
         excludedHosts,
         hostProxies,
         hostProxiesDetails,
+        tldRoutingEnabled,
+        flatProxiesList,
+        withDns,
       );
     }
 
@@ -216,6 +219,9 @@ const getProxyForExtensionConnectionCheck = async (
   excludedHosts: string[],
   hostProxies: ProxyInfoMap,
   hostProxiesDetails: Record<string, ProxyDetails>,
+  tldRoutingEnabled: boolean,
+  flatProxiesList: SocksProxy[],
+  withDns: (proxy: ProxyInfo) => ProxyInfo,
 ) => {
   const { isAboutPage, host } = await getActiveTabDetails();
   const { domain, hasSubdomain, fullHost } = checkDomain(host);
@@ -245,17 +251,28 @@ const getProxyForExtensionConnectionCheck = async (
 
   // d) If current tab is proxied, we need to check for the current tab's proxy
   if (isTabDomainProxied && isTabProxyEnabled) {
-    return hostProxies[tabDomain];
+    return withDns(hostProxies[tabDomain]);
   }
 
   // d-b) Fallback to parent domain for subdomains (e.g., www.reddit.com -> reddit.com)
   if (isParentDomainProxied && isParentProxyEnabled) {
-    return hostProxies[domain];
+    return withDns(hostProxies[domain]);
+  }
+
+  // d-c) Blocklist routing for the active tab domain
+  const blocklistProxy = await getBlocklistProxy(tabDomain, hasSubdomain ? domain : undefined);
+  if (blocklistProxy) return withDns(blocklistProxy);
+
+  // d-d) TLD routing for the active tab domain
+  if (tldRoutingEnabled) {
+    const tld = getTLD(tabDomain);
+    const tldProxy = getTLDCountryProxy(tld, flatProxiesList);
+    if (tldProxy) return withDns(tldProxy);
   }
 
   // e) If global proxy is enabled
   if (isGlobalProxyEnabled) {
-    return globalProxy;
+    return withDns(globalProxy);
   }
 
   return { type: 'direct' };
