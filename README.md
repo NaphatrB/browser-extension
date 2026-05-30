@@ -42,6 +42,27 @@ proxy for every matching request.
 Example public lists: [oisd.nl](https://oisd.nl/),
 [StevenBlack hosts](https://github.com/StevenBlack/hosts).
 
+### Popup routing status _(new)_
+
+The popup's **Proxies** section now shows live **"in use"** indicators for TLD and blocklist routing
+when the current domain is being actively routed by either feature:
+
+- **TLD routing** — displays which TLD is matched and which country it is routed through.
+- **Blocklist routing** — displays which blocklist matched the domain and the destination country.
+
+### Custom DNS (DoH / DoT) _(new)_
+
+Configure a custom DNS resolver in the **Settings** tab:
+
+- Choose **DoH** (DNS-over-HTTPS) or **DoT** (DNS-over-TLS) mode.
+- Enter the resolver URL / hostname (e.g. `https://dns.nextdns.io/dns-query`).
+- A shortcut button opens Firefox's Privacy & Security settings to point Firefox at the same
+  resolver.
+
+When custom DNS is enabled the extension sets `proxyDNS: false` on all proxy responses so that the
+browser's own configured DoH/DoT resolver is used instead of the proxy's default DNS. The active
+resolver is shown in the connection details panel.
+
 ### Firefox for Android support _(new)_
 
 The extension is compatible with **Firefox for Android 120+**. Core proxy features work on mobile.
