@@ -6,7 +6,7 @@ import { baseConfig } from './constants';
  * Some ccTLDs don't match the ISO 3166-1 alpha-2 country code used by Mullvad relay locations.
  * The most common mismatch is `.uk` → `gb`.
  */
-const TLD_TO_COUNTRY_CODE: Record<string, string> = {
+export const TLD_TO_COUNTRY_CODE: Record<string, string> = {
   uk: 'gb',
 };
 

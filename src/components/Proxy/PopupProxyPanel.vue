@@ -15,6 +15,7 @@ import useLocations from '@/composables/useLocations';
 import useProxyPermissions from '@/composables/useProxyPermissions';
 import useRandomProxy from '@/composables/useRandomProxy';
 import useSocksProxy from '@/composables/useSocksProxy';
+import useRoutingStatus from '@/composables/useRoutingStatus';
 
 const showDetailsAllWebsites = ref(false);
 const showDetailsCurrentDomain = ref(false);
@@ -43,6 +44,7 @@ import useStore from '@/composables/useStore';
 
 const { flatProxiesList } = useStore();
 const { getSocksProxies } = useSocksProxies();
+const { tldRouteInfo, blocklistRouteInfo } = useRoutingStatus();
 
 const isCurrentHostProxyOverriden = computed(() => randomProxyMode.value);
 
@@ -257,6 +259,29 @@ watch(isGranted, (newValue) => {
           </p>
         </div>
       </n-collapse-transition>
+    </div>
+
+    <div v-if="tldRouteInfo" class="border-[#354f6b] border-t-1 mt-3 pt-3">
+      <div class="flex flex-row items-center">
+        <TitleCategory :level="3" title="TLD routing" />
+        <InUseTag />
+      </div>
+      <p class="text-sm mt-1">
+        <span class="font-semibold">.{{ tldRouteInfo.tld }}</span> is routed through
+        {{ tldRouteInfo.country }}.
+      </p>
+    </div>
+
+    <div v-if="blocklistRouteInfo" class="border-[#354f6b] border-t-1 mt-3 pt-3">
+      <div class="flex flex-row items-center">
+        <TitleCategory :level="3" title="Blocklist routing" />
+        <InUseTag />
+      </div>
+      <p class="text-sm mt-1">
+        This domain matched
+        <span class="font-semibold">{{ blocklistRouteInfo.url }}</span> and is routed through
+        {{ blocklistRouteInfo.proxyDetails?.country }}.
+      </p>
     </div>
   </n-card>
 

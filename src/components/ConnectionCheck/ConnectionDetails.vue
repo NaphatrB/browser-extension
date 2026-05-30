@@ -9,6 +9,7 @@ import MuSpinner from '@/components/Icons/MuSpinner.vue';
 
 import { DnsServer } from '@/composables/useConnection/useCheckDnsLeaks';
 import { ConnectionKey, defaultConnection } from '@/composables/useConnection/useConnection';
+import useCustomDns from '@/composables/useCustomDns';
 
 defineProps<{
   dnsServers: DnsServer[];
@@ -21,6 +22,7 @@ defineProps<{
 
 const { connection } = inject(ConnectionKey, defaultConnection);
 const isMullvad = computed(() => connection.value.isMullvad);
+const { customDns } = useCustomDns();
 </script>
 
 <template>
@@ -73,6 +75,10 @@ const isMullvad = computed(() => connection.value.isMullvad);
           <span class="ml-1">Couldn't determine DNS</span>
         </div>
       </div>
+    </div>
+    <div v-if="customDns.enabled && customDns.url" class="flex flex-row items-center mt-1">
+      <h4 class="font-semibold mr-2 inline-block">Custom DNS</h4>
+      <span class="text-sm">{{ customDns.mode.toUpperCase() }}: {{ customDns.url }}</span>
     </div>
   </div>
 </template>
