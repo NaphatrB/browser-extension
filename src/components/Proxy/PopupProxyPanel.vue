@@ -20,6 +20,8 @@ import useRoutingStatus from '@/composables/useRoutingStatus';
 const showDetailsAllWebsites = ref(false);
 const showDetailsCurrentDomain = ref(false);
 const showDetailsRandom = ref(false);
+const showDetailsTld = ref(false);
+const showDetailsBlocklist = ref(false);
 
 const { isAboutPage, isExtensionPage } = useActiveTab();
 const { proxySelect } = useLocations();
@@ -42,9 +44,13 @@ const {
 import useSocksProxies from '@/composables/useSocksProxies';
 import useStore from '@/composables/useStore';
 
-const { flatProxiesList } = useStore();
+const { flatProxiesList, tldRoutingEnabled, blocklistRoutes } = useStore();
 const { getSocksProxies } = useSocksProxies();
 const { tldRouteInfo, blocklistRouteInfo } = useRoutingStatus();
+
+const activeBlocklistCount = computed(
+  () => blocklistRoutes.value.filter((r) => r.enabled && r.proxyDetails).length,
+);
 
 const isCurrentHostProxyOverriden = computed(() => randomProxyMode.value);
 
@@ -261,27 +267,90 @@ watch(isGranted, (newValue) => {
       </n-collapse-transition>
     </div>
 
-    <div v-if="tldRouteInfo" class="border-[#354f6b] border-t-1 mt-3 pt-3">
-      <div class="flex flex-row items-center">
-        <TitleCategory :level="3" title="TLD routing" />
-        <InUseTag />
+    <div class="border-[#354f6b] border-t-1 mt-3 pt-3">
+      <div class="flex justify-between cursor-pointer" @click="showDetailsTld = !showDetailsTld">
+        <div class="flex flex-row items-center">
+          <TitleCategory :level="3" title="TLD routing" />
+          <InUseTag v-if="tldRouteInfo" />
+        </div>
+
+        <div class="flex flex-row items-center">
+          <n-switch
+            :value="tldRoutingEnabled"
+            @update-value="(v) => (tldRoutingEnabled = v)"
+            @click.stop
+            class="mr-2"
+          />
+          <n-icon size="20" class="cursor-pointer">
+            <FeChevronUp v-if="showDetailsTld" />
+            <FeChevronDown v-else />
+          </n-icon>
+        </div>
       </div>
-      <p class="text-sm mt-1">
+
+      <!-- Active status: always visible when routing is active for the current domain -->
+      <p v-if="tldRouteInfo" class="text-sm mt-1">
         <span class="font-semibold">.{{ tldRouteInfo.tld }}</span> is routed through
         {{ tldRouteInfo.country }}.
       </p>
+
+      <n-collapse-transition :show="showDetailsTld" class="mt-2">
+        <div class="flex items-center mb-2">
+          <n-icon size="20" class="mr-3">
+            <FeInfo />
+          </n-icon>
+          <p v-if="tldRoutingEnabled && !tldRouteInfo">
+            No TLD routing active for the current domain.
+          </p>
+          <p v-else-if="!tldRoutingEnabled">
+            When enabled, country-code TLD domains (e.g. .th, .de, .se) are automatically routed
+            through the matching Mullvad proxy country.
+          </p>
+        </div>
+      </n-collapse-transition>
     </div>
 
-    <div v-if="blocklistRouteInfo" class="border-[#354f6b] border-t-1 mt-3 pt-3">
-      <div class="flex flex-row items-center">
-        <TitleCategory :level="3" title="Blocklist routing" />
-        <InUseTag />
+    <div class="border-[#354f6b] border-t-1 mt-3 pt-3">
+      <div
+        class="flex justify-between cursor-pointer"
+        @click="showDetailsBlocklist = !showDetailsBlocklist"
+      >
+        <div class="flex flex-row items-center">
+          <TitleCategory :level="3" title="Blocklist routing" />
+          <InUseTag v-if="blocklistRouteInfo" />
+        </div>
+
+        <div class="flex flex-row items-center">
+          <n-tag v-if="activeBlocklistCount > 0" round size="small" type="info" class="mr-2">
+            {{ activeBlocklistCount }}
+          </n-tag>
+          <n-icon size="20" class="cursor-pointer">
+            <FeChevronUp v-if="showDetailsBlocklist" />
+            <FeChevronDown v-else />
+          </n-icon>
+        </div>
       </div>
-      <p class="text-sm mt-1">
-        This domain matched
-        <span class="font-semibold">{{ blocklistRouteInfo.url }}</span> and is routed through
+
+      <!-- Active status: always visible when current domain matches a blocklist route -->
+      <p v-if="blocklistRouteInfo" class="text-sm mt-1">
+        Matched <span class="font-semibold">{{ blocklistRouteInfo.url }}</span> — routed through
         {{ blocklistRouteInfo.proxyDetails?.country }}.
       </p>
+
+      <n-collapse-transition :show="showDetailsBlocklist" class="mt-2">
+        <div class="flex items-center mb-2">
+          <n-icon size="20" class="mr-3">
+            <FeInfo />
+          </n-icon>
+          <p v-if="activeBlocklistCount > 0 && !blocklistRouteInfo">
+            No blocklist route matches the current domain.
+          </p>
+          <p v-else-if="activeBlocklistCount === 0">
+            No blocklist routes configured. Add routes in
+            <strong>Options → Proxy → Blocklist routing</strong>.
+          </p>
+        </div>
+      </n-collapse-transition>
     </div>
   </n-card>
 

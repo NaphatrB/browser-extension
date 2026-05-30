@@ -73,7 +73,7 @@ test.describe('Settings – Custom DNS card', () => {
 test.describe('Popup – TLD routing in use', () => {
   test.use({ connectionState: 'disconnected' });
 
-  test('shows TLD routing row when current domain TLD matches a proxy country', async ({
+  test('shows TLD routing row and active status when current domain TLD matches a proxy country', async ({
     extensionPage,
   }) => {
     // Seed before navigation: permissions granted, Thai tab, TLD routing on, Thai proxy
@@ -112,11 +112,13 @@ test.describe('Popup – TLD routing in use', () => {
 
     await expect(extensionPage.locator('text=TLD routing')).toBeVisible({ timeout: 8_000 });
     await expect(extensionPage.locator('text=Thailand')).toBeVisible();
-    // "in use" tag should appear (may be duplicate if current domain also shows it)
+    // "in use" tag should appear
     await expect(extensionPage.locator('text=in use').first()).toBeVisible();
   });
 
-  test('does NOT show TLD routing row when TLD routing is disabled', async ({ extensionPage }) => {
+  test('shows TLD routing section but no active status when TLD routing is disabled', async ({
+    extensionPage,
+  }) => {
     await extensionPage.addInitScript(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const w = window as any;
@@ -147,10 +149,12 @@ test.describe('Popup – TLD routing in use', () => {
 
     await extensionPage.goto('/dist/popup/index.html');
     await extensionPage.waitForSelector('#app > *', { timeout: 10_000 });
-    // Allow time for the proxy panel to fully render
     await extensionPage.waitForTimeout(1_000);
 
-    await expect(extensionPage.locator('text=TLD routing')).not.toBeVisible();
+    // Section is always visible but no active status shown when disabled
+    await expect(extensionPage.locator('text=TLD routing')).toBeVisible({ timeout: 5_000 });
+    await expect(extensionPage.locator('text=Thailand')).not.toBeVisible();
+    await expect(extensionPage.locator('text=in use')).not.toBeVisible();
   });
 });
 
@@ -159,7 +163,7 @@ test.describe('Popup – TLD routing in use', () => {
 test.describe('Popup – Blocklist routing in use', () => {
   test.use({ connectionState: 'disconnected' });
 
-  test('shows blocklist routing row when current domain is in a blocklist', async ({
+  test('shows blocklist routing row and active status when current domain is in a blocklist', async ({
     extensionPage,
   }) => {
     // Default active tab is example.com; seed a blocklist route for it
@@ -196,7 +200,7 @@ test.describe('Popup – Blocklist routing in use', () => {
     await expect(extensionPage.locator('text=in use').first()).toBeVisible();
   });
 
-  test('does NOT show blocklist routing row when domain is not matched', async ({
+  test('shows blocklist section but no active status when domain is not matched', async ({
     extensionPage,
   }) => {
     await extensionPage.addInitScript(() => {
@@ -227,6 +231,10 @@ test.describe('Popup – Blocklist routing in use', () => {
     await extensionPage.waitForSelector('#app > *', { timeout: 10_000 });
     await extensionPage.waitForTimeout(1_000);
 
-    await expect(extensionPage.locator('text=Blocklist routing')).not.toBeVisible();
+    // Section is always visible but no active status shown when domain doesn't match
+    await expect(extensionPage.locator('text=Blocklist routing')).toBeVisible({ timeout: 5_000 });
+    await expect(extensionPage.locator('text=nsfw-small.oisd.nl')).not.toBeVisible();
+    await expect(extensionPage.locator('text=through Sweden')).not.toBeVisible();
+    await expect(extensionPage.locator('text=in use')).not.toBeVisible();
   });
 });
