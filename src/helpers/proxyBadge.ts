@@ -103,11 +103,11 @@ const setTabExtBadge = async (
   if (isExcluded) {
     browser.browserAction.setBadgeText({ text: '🚫', tabId });
     browser.browserAction.setBadgeBackgroundColor({ color: '#ffd524', tabId });
-    browser.browserAction.setBadgeTextColor({ color: 'black', tabId });
+    browser.browserAction.setBadgeTextColor?.({ color: 'black', tabId });
   } else if (proxy) {
     browser.browserAction.setBadgeText({ text: countryCode.toUpperCase(), tabId });
     browser.browserAction.setBadgeBackgroundColor({ color: '#ffd524', tabId });
-    browser.browserAction.setBadgeTextColor({ color: 'black', tabId });
+    browser.browserAction.setBadgeTextColor?.({ color: 'black', tabId });
   } else if (randomProxyMode) {
     browser.browserAction.setBadgeText({ text: countryCode, tabId });
   } else {

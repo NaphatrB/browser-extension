@@ -9,6 +9,10 @@ vi.mock('@/helpers/getRandomSessionProxy', () => ({
   },
 }));
 
+vi.mock('@/helpers/socksProxy/getBlocklistProxy', () => ({
+  getBlocklistProxy: vi.fn().mockResolvedValue(null),
+}));
+
 describe('isLocalOrReservedIP', () => {
   it('should return true for localhost', () => {
     expect(isLocalOrReservedIP('localhost:8080')).toBeTruthy();

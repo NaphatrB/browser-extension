@@ -45,7 +45,11 @@ const checkRTCLeaks = async () => {
 };
 
 const setWebRTC = (value: boolean) => {
-  browser.privacy.network.peerConnectionEnabled.set({ value: value });
+  try {
+    browser.privacy.network.peerConnectionEnabled.set({ value: value });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 watch(webRTCStatus, () => {

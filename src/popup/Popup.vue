@@ -30,7 +30,7 @@ const isProxyInUse = computed(
 </script>
 
 <template>
-  <main class="w-[450px] m-3">
+  <main class="w-full max-w-[450px] m-3">
     <PopupHeader
       :isErrorDNS
       :isLeakingDNS

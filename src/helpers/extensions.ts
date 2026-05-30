@@ -8,6 +8,8 @@ const { updateRecommendation } = useRecommendations();
 type ExtensionInfo = browser.management.ExtensionInfo;
 
 export const addExtensionsListeners = () => {
+  if (!browser.management) return;
+
   management.onInstalled.addListener(onInstall);
   management.onUninstalled.addListener(onUninstall);
   management.onEnabled.addListener(onEnable);

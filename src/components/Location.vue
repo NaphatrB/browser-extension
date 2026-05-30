@@ -12,18 +12,21 @@ import useSocksProxies from '@/composables/useSocksProxies';
 import useSocksProxy from '@/composables/useSocksProxy';
 import useLocations from '@/composables/useLocations';
 import useProxyHistory from '@/composables/useProxyHistory/useProxyHistory';
+import useBlocklistRoutes from '@/composables/useBlocklistRoutes';
 import type { HistoryEntry } from '@/composables/useProxyHistory/HistoryEntries.types';
 import Countries from '@/components/Countries.vue';
 
-const { customProxyHost, customProxySelect, toggleLocations } = useLocations();
+const { blocklistRouteId, customProxyHost, customProxySelect, toggleLocations } = useLocations();
 const { clearFilter, filteredProxies, isError, error } = useSocksProxies();
 
 const { setCustomProxy, setGlobalProxy } = useSocksProxy();
 const { storeSocksProxyUsage } = useProxyHistory();
+const { setBlocklistProxy } = useBlocklistRoutes();
 
-const currentOrAllWebsites = computed(() =>
-  customProxySelect.value ? customProxyHost.value : 'all your browser traffic',
-);
+const currentOrAllWebsites = computed(() => {
+  if (blocklistRouteId.value) return 'the selected blocklist';
+  return customProxySelect.value ? customProxyHost.value : 'all your browser traffic';
+});
 
 export type SetProxyProps = {
   country: string;
@@ -40,7 +43,10 @@ const setProxy = ({ country, countryCode, city, hostname, ipv4_address, port }: 
   storeSocksProxyUsage({ country, countryCode, city, hostname, ipv4_address });
   toggleLocations();
 
-  if (customProxySelect.value) {
+  if (blocklistRouteId.value) {
+    setBlocklistProxy({ country, countryCode, city, hostname, ipv4_address, port }, blocklistRouteId.value);
+    blocklistRouteId.value = '';
+  } else if (customProxySelect.value) {
     setCustomProxy(
       { country, countryCode, city, hostname, ipv4_address, port },
       customProxyHost.value,

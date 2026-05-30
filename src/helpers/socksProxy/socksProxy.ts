@@ -6,9 +6,12 @@ import {
   ProxyInfoMap,
   ProxyInfo,
 } from '@/helpers/socksProxy/socksProxy.types';
+import { SocksProxy } from '@/helpers/socksProxy/socksProxies.types';
 import { checkDomain } from '@/helpers/domain';
 import { getRandomSessionProxy } from '@/helpers/socksProxy/getRandomSessionProxy';
 import { getActiveTabDetails } from '@/helpers/tabs';
+import { getTLD, getTLDCountryProxy } from '@/helpers/socksProxy/getTLDCountryProxy';
+import { getBlocklistProxy } from '@/helpers/socksProxy/getBlocklistProxy';
 
 // TODO decide what how to handle fallback proxy (if proxy is invalid, it will fallback to Firefox proxy if configured)
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1750561
@@ -17,11 +20,13 @@ export const handleProxyRequest = async (details: browser.proxy._OnRequestDetail
   try {
     const {
       excludedHosts,
+      flatProxiesList,
       globalProxy,
       globalProxyDetails,
       hostProxies,
       hostProxiesDetails,
       randomProxyMode,
+      tldRoutingEnabled,
     } = await getLocalStorageItems();
 
     const currentHost = getCurrentHost(details);
@@ -79,7 +84,21 @@ export const handleProxyRequest = async (details: browser.proxy._OnRequestDetail
       return hostProxies[domain];
     }
 
-    // 6. Check global proxy
+    // 5.5 Check blocklist-based domain routing
+    const blocklistProxy = await getBlocklistProxy(
+      currentDomain,
+      hasSubdomain ? domain : undefined,
+    );
+    if (blocklistProxy) return blocklistProxy;
+
+    // 6. TLD routing: automatically pick a country proxy matching the ccTLD
+    if (tldRoutingEnabled) {
+      const tld = getTLD(currentDomain);
+      const tldProxy = getTLDCountryProxy(tld, flatProxiesList);
+      if (tldProxy) return tldProxy;
+    }
+
+    // 7. Check global proxy
     if (isGlobalProxyEnabled) {
       return globalProxy;
     }
@@ -93,28 +112,34 @@ export const handleProxyRequest = async (details: browser.proxy._OnRequestDetail
 
 async function getLocalStorageItems(): Promise<{
   excludedHosts: string[];
+  flatProxiesList: SocksProxy[];
   globalProxy: ProxyInfo;
   globalProxyDetails: ProxyDetails;
   hostProxies: ProxyInfoMap;
   hostProxiesDetails: Record<string, ProxyDetails>;
   randomProxyMode: boolean;
+  tldRoutingEnabled: boolean;
 }> {
   const data = await browser.storage.local.get([
     'excludedHosts',
+    'flatProxiesList',
     'globalProxy',
     'globalProxyDetails',
     'hostProxies',
     'hostProxiesDetails',
     'randomProxyMode',
+    'tldRoutingEnabled',
   ]);
 
   return {
     excludedHosts: JSON.parse(data.excludedHosts),
+    flatProxiesList: data.flatProxiesList ? JSON.parse(data.flatProxiesList) : [],
     globalProxy: JSON.parse(data.globalProxy),
     globalProxyDetails: JSON.parse(data.globalProxyDetails),
     hostProxies: JSON.parse(data.hostProxies),
     hostProxiesDetails: JSON.parse(data.hostProxiesDetails),
     randomProxyMode: JSON.parse(data.randomProxyMode),
+    tldRoutingEnabled: data.tldRoutingEnabled ? JSON.parse(data.tldRoutingEnabled) : false,
   };
 }
 

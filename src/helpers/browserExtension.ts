@@ -7,7 +7,7 @@ export enum Tab {
 export const { version } = browser.runtime.getManifest();
 
 export const openPopup = () => {
-  browser.browserAction.openPopup();
+  browser.browserAction.openPopup?.();
 };
 export const closePopup = () => {
   // The delay is added to stop a new empty browser window from opening

@@ -2,11 +2,13 @@
 import { NCard } from 'naive-ui';
 
 import Button from '@/components/Buttons/Button.vue';
+import BlocklistRouting from '@/components/Proxy/BlocklistRouting.vue';
 import CustomProxies from '@/components/Proxy/CustomProxies.vue';
 import IconLabel from '@/components/IconLabel.vue';
 import LocationDrawer from '@/components/LocationDrawer.vue';
 import ProxyAutoReload from '@/components/Proxy/ProxyAutoReload.vue';
 import RandomProxyMode from '@/components/Proxy/RandomProxyMode.vue';
+import TLDRouting from '@/components/Proxy/TLDRouting.vue';
 import TitleCategory from '@/components/TitleCategory.vue';
 
 import useProxyPermissions from '@/composables/useProxyPermissions';
@@ -18,6 +20,8 @@ const { isGranted, requestPermissions } = useProxyPermissions();
     <CustomProxies />
     <ProxyAutoReload class="mt-4" />
     <RandomProxyMode class="mt-4" />
+    <TLDRouting class="mt-4" />
+    <BlocklistRouting class="mt-4" />
     <LocationDrawer />
   </template>
 

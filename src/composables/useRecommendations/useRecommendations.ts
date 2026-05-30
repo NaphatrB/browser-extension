@@ -31,6 +31,8 @@ const getRecommendationById = (id: string) => {
 };
 
 const updateExtensions = async () => {
+  if (!browser.management) return;
+
   const installedAddons = (await management.getAll()).filter((extension) =>
     defaultRecommendationsIds.includes(extension.id),
   );
@@ -60,6 +62,8 @@ const updateHttpsOnly = async () => {
 };
 
 const updateDefaultSearch = async () => {
+  if (!browser.search) return;
+
   const searchEngines = await browser.search.get();
 
   const defaultSearchEngine = searchEngines

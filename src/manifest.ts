@@ -16,7 +16,6 @@ export async function getManifest() {
     browser_action: {
       default_icon: './assets/mullvad-logo.svg',
       default_popup: './dist/popup/index.html',
-      default_area: 'navbar',
     },
     options_ui: {
       page: './dist/options/index.html',
@@ -38,6 +37,9 @@ export async function getManifest() {
         strict_min_version: '91.1.0',
         update_url: 'https://cdn.mullvad.net/browser-extension/updates.json',
         id: '{d19a89b9-76c1-4a61-bcd4-49e8de916403}',
+      },
+      gecko_android: {
+        strict_min_version: '120.0',
       },
     },
     incognito: 'spanning',
