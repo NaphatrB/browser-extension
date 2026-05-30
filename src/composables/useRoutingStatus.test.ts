@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ref } from 'vue';
+import type { BlocklistRoute } from '@/helpers/blocklist/blocklist.types';
+import { ProxyInfoType } from '@/helpers/socksProxy/socksProxy.types';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -19,11 +21,11 @@ const makeProxy = (countryCode: string, country: string, ipv4 = '1.2.3.4') => ({
   },
 });
 
-const makeBlocklistRoute = (id: string, url: string, country: string, domains: string[]) => ({
+const makeBlocklistRoute = (id: string, url: string, country: string, domains: string[]): BlocklistRoute => ({
   id,
   url,
   enabled: true,
-  proxyInfo: { type: 'socks', host: '1.2.3.4', port: 1080, proxyDNS: true },
+  proxyInfo: { type: ProxyInfoType.socks, host: '1.2.3.4', port: 1080, proxyDNS: true },
   proxyDetails: { server: 'se-sto-001', city: 'Stockholm', country, socksEnabled: true },
   domains,
   lastFetched: Date.now(),
@@ -33,7 +35,7 @@ const makeBlocklistRoute = (id: string, url: string, country: string, domains: s
 
 const tldRoutingEnabled = ref(false);
 const flatProxiesList = ref<ReturnType<typeof makeProxy>[]>([]);
-const blocklistRoutes = ref<ReturnType<typeof makeBlocklistRoute>[]>([]);
+const blocklistRoutes = ref<BlocklistRoute[]>([]);
 const activeTabHost = ref('');
 
 vi.mock('@/composables/useStore', () => ({
