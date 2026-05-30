@@ -9,6 +9,7 @@ import FeInfo from '@/components/Icons/FeInfo.vue';
 import SplitButton from '@/components/Buttons/SplitButton.vue';
 import TitleCategory from '@/components/TitleCategory.vue';
 import InUseTag from '@/components/Proxy/InUseTag.vue';
+import CustomDnsCard from '@/components/Dns/CustomDnsCard.vue';
 
 import useActiveTab from '@/composables/useActiveTab';
 import useLocations from '@/composables/useLocations';
@@ -383,4 +384,6 @@ watch(isGranted, (newValue) => {
       <Button size="small" class="mt-3" @click="requestPermissions"> Grant permissions </Button>
     </div>
   </n-card>
+
+  <CustomDnsCard class="mt-2" />
 </template>

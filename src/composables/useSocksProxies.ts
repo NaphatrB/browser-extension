@@ -29,9 +29,11 @@ const useSocksProxies = () => {
     try {
       const response = await fetch(SOCKS_API_URL);
       const data: SocksProxy[] = await response.json();
-      flatProxiesList.value = data.filter((proxy: SocksProxy) => {
-        return proxy.online && proxy.ipv4_address && proxy.hostname;
-      });
+      flatProxiesList.value = addCountryCode(
+        data.filter((proxy: SocksProxy) => {
+          return proxy.online && proxy.ipv4_address && proxy.hostname;
+        }),
+      );
     } catch (e: unknown) {
       isError.value = true;
 
